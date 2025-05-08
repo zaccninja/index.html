@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Buscar Endereço</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      h2 {
+        margin-bottom: 10px;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #000;
+        border-radius: 4px;
+      }
+
+      #map {
+        height: 400px;
+        width: 100%;
+        margin-top: 20px;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Buscar Endereço</h2>
+    <input id="pac-input" type="text" placeholder="Digite um endereço" />
+
+    <div id="map"></div>
+
+    <script>
+      let map, marker, autocomplete;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: -23.55052, lng: -46.633308 }, // São Paulo
+          zoom: 12,
+        });
+
+        marker = new google.maps.Marker({
+          map: map,
+        });
+
+        const input = document.getElementById("pac-input");
+        autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo("bounds", map);
+
+        autocomplete.addListener("place_changed", () => {
+          const place = autocomplete.getPlace();
+          if (!place.geometry || !place.geometry.location) {
+            alert("Endereço inválido.");
+            return;
+          }
+
+          map.setCenter(place.geometry.location);
+          map.setZoom(16);
+          marker.setPosition(place.geometry.location);
+        });
+      }
+    </script>
+
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASItnCDMpu3b5JolCnUIdGX2t9AyAd9pk&libraries=places&callback=initMap"
+      async
+      defer
+    ></script>
+  </body>
+</html>
